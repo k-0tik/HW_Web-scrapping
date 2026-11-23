@@ -1,13 +1,9 @@
 ## Определяем список ключевых слов:
 KEYWORDS = ['дизайн', 'фото', 'web', 'python']
 
-# pip install requests
-# pip install beautifulsoup4
-# pip install lxml
-# pip install fake_headers
 # pip install selenium
 
-import json
+# import json
 from time import sleep
 
 from selenium.webdriver import Edge
@@ -29,7 +25,7 @@ sleep(5)
 # class="tm-articles-list" - коробка со статьями
 # class="article-snippet" - коробочка с одной статьей
 
-article_block = driver.find_element(By.CSS_SELECTOR, 'div.tm-articles-list')
+article_block = wait_element(driver, value='div.tm-articles-list')
 article_list = article_block.find_elements(By.CSS_SELECTOR, 'div.article-snippet')
 
 
@@ -44,7 +40,7 @@ for link in links:
     driver.get(link)
     title = wait_element(driver, value='h1').text.strip()
     time = wait_element(driver, value='time').get_attribute('title')
-    text = wait_element(driver, value='div.article-formatted-body.article-formatted-body.article-formatted-body_version-2').text.strip()
+    text = wait_element(driver, value='div.article-formatted-body_version-2').text.strip()
     tags = wait_element(driver, value='div.tm-publication-hubs').text.strip()
 
     title_lower = title.lower()
@@ -59,5 +55,12 @@ for link in links:
         })
 
 
-with open('articles2.json', 'w', encoding='utf-8') as file:
-    json.dump(parsed_data, file, ensure_ascii=False, indent=2)
+# with open('articles2.json', 'w', encoding='utf-8') as file:
+#     json.dump(parsed_data, file, ensure_ascii=False, indent=2)
+
+#  Замена вывода с json-файла на консоль
+
+for item in parsed_data:
+    print(f"{item['time']} - {item['title']} - {item['link']}")
+
+driver.quit()
